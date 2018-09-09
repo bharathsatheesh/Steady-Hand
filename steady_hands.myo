@@ -1,0 +1,41 @@
+scriptId = 'com.thalmic.examples.steady_hands'
+scriptTitle = "Steady Hands"
+scriptDetailsUrl = "Steady hands is a cost effective way to counteract the effects of Parkinson's disease"
+
+
+function onPoseEdge(pose, edge)
+    myo.debug("onPoseEdge: " .. pose .. ", " .. edge)
+end
+
+function onPeriodic()
+    local now = myo.getTimeMilliseconds()
+    local frequency = 0
+    local counter = 0 
+    while counter < 5 do
+        if counter == 5 then break end
+        x, y, z = myo.getGyro()
+        frequency = frequency + (x) + (y) + (z)
+        myo.debug(string.format("%.0f",frequency))
+        counter = counter + 1
+    end
+    counter = 0
+    if frequency > 250 and frequency < 350 then
+        myo.vibrate("short")
+        myo.lock()
+        myo.lockingpolicy("none")
+    end
+    frequency = 0
+end
+
+function onForegroundWindowChange(app, title)
+    myo.debug("onForegroundWindowChange: " .. app .. ", " .. title)
+    return true
+end
+
+function activeAppName()
+    return "Output Everything"
+end
+
+function onActiveChange(isActive)
+    myo.debug("onActiveChange")
+end
